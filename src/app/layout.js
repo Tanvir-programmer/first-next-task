@@ -30,7 +30,6 @@ export default function RootLayout({ children }) {
           <Navbar />
           {pathname === "/" && <Hero />}
           {children}
-
           <Footer />
         </SessionProvider>
       </body>
