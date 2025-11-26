@@ -1,21 +1,30 @@
-import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
+// app/api/auth/[...nextauth]/route.js
+import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
 
-let users = global.users || (global.users = []);
+export const authOptions = {
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        const user = { id: 1, name: "Tanvir", email: credentials.email };
+        return user || null;
+      },
+    }),
+  ],
+  pages: {
+    signIn: "/login",
+  },
+};
 
-export async function POST(req) {
-  const { email, password, name } = await req.json();
-
-  if (users.find((u) => u.email === email)) {
-    return NextResponse.json(
-      { message: "User already exists" },
-      { status: 400 }
-    );
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  users.push({ email, password: hashedPassword, name });
-
-  return NextResponse.json({ message: "User registered" }, { status: 201 });
-}
+const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST };

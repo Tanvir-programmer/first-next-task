@@ -1,67 +1,73 @@
 "use client";
 
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await fetch("/api/register", {
-      method: "POST",
-      body: JSON.stringify({ email, password, name }),
-      headers: { "Content-Type": "application/json" },
-    });
-
-    if (!res.ok) {
-      const data = await res.json();
-      setError(data.message || "Registration failed");
-    } else {
-      router.push("/login");
+    try {
+      // Call your API to create a user
+      // Example: await fetch('/api/register', { method: 'POST', body: JSON.stringify({name,email,password}) })
+      router.push("/"); // redirect to home after registration
+    } catch (err) {
+      setError("Registration failed");
     }
   };
 
   return (
     <div className="flex justify-center items-center h-screen">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-8 rounded shadow-md w-full max-w-md text-center"
-      >
+      <div className="bg-white p-8 rounded shadow-md w-full max-w-md text-center">
         <h1 className="text-2xl font-bold mb-4">Register</h1>
-        <input
-          type="text"
-          placeholder="Name"
-          className="w-full border p-3 rounded mb-2"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full border p-3 rounded mb-2"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full border p-3 rounded mb-2"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button className="w-full py-3 bg-green-600 text-white rounded">
-          Register
+
+        {/* Google Sign Up */}
+        <button
+          onClick={() => signIn("google", { callbackUrl: "/" })}
+          className="w-full py-3 bg-blue-600 text-white rounded mb-4"
+        >
+          Continue with Google
         </button>
-        {error && <p className="text-red-500 mt-2">{error}</p>}
-      </form>
+
+        <div className="mb-4 text-gray-400">OR</div>
+
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Full Name"
+            className="w-full border p-3 rounded mb-2"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            className="w-full border p-3 rounded mb-2"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className="w-full border p-3 rounded mb-2"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button className="w-full py-3 bg-green-600 text-white rounded mb-2">
+            Register
+          </button>
+          {error && <p className="text-red-500">{error}</p>}
+        </form>
+      </div>
     </div>
   );
 }

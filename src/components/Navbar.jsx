@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -24,26 +24,31 @@ export default function Navbar() {
           <Link href="/addCourse">Add Course</Link>
           <Link href="/contact">Contact</Link>
 
+          {/* Right Section: Login/Register or Profile */}
           {session ? (
             <div className="relative">
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="px-3 py-1 border rounded"
+                className="px-3 py-1 border rounded flex items-center gap-2"
               >
-                {session.user.name || session.user.email}
+                {session.user.image && (
+                  <img
+                    src={session.user.image}
+                    alt="profile"
+                    className="w-6 h-6 rounded-full"
+                  />
+                )}
+                <span>{session.user.name || session.user.email}</span>
               </button>
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow-md flex flex-col">
-                  <Link
-                    href="/addCourse"
-                    className="px-4 py-2 hover:bg-gray-100"
-                  >
+                  <Link href="/profile" className="px-4 py-2 hover:bg-gray-100">
+                    Profile
+                  </Link>
+                  <Link href="/addCourse" className="px-4 py-2 hover:bg-gray-100">
                     Add Course
                   </Link>
-                  <Link
-                    href="/manageCourses"
-                    className="px-4 py-2 hover:bg-gray-100"
-                  >
+                  <Link href="/manageCourses" className="px-4 py-2 hover:bg-gray-100">
                     Manage Courses
                   </Link>
                   <button
@@ -56,12 +61,20 @@ export default function Navbar() {
               )}
             </div>
           ) : (
-            <button
-              onClick={() => signIn("google", { callbackUrl: "/" })}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-              Login with Google
-            </button>
+            <div className="flex gap-3">
+              <Link
+                href="/login"
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
+                Login
+              </Link>
+              <Link
+                href="/register"
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              >
+                Register
+              </Link>
+            </div>
           )}
         </div>
 
@@ -77,27 +90,16 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden bg-white border-t flex flex-col">
-          <Link href="/" className="px-4 py-2">
-            Home
-          </Link>
-          <Link href="/courses" className="px-4 py-2">
-            Courses
-          </Link>
-          <Link href="/addCourse" className="px-4 py-2">
-            Add Course
-          </Link>
-          <Link href="/contact" className="px-4 py-2">
-            Contact
-          </Link>
+          <Link href="/" className="px-4 py-2">Home</Link>
+          <Link href="/courses" className="px-4 py-2">Courses</Link>
+          <Link href="/addCourse" className="px-4 py-2">Add Course</Link>
+          <Link href="/contact" className="px-4 py-2">Contact</Link>
 
           {session ? (
             <div className="border-t">
-              <Link href="/addCourse" className="block px-4 py-2">
-                Add Course
-              </Link>
-              <Link href="/manageCourses" className="block px-4 py-2">
-                Manage Courses
-              </Link>
+              <Link href="/profile" className="block px-4 py-2">Profile</Link>
+              <Link href="/addCourse" className="block px-4 py-2">Add Course</Link>
+              <Link href="/manageCourses" className="block px-4 py-2">Manage Courses</Link>
               <button
                 onClick={() => signOut({ callbackUrl: "/" })}
                 className="w-full text-left px-4 py-2 hover:bg-gray-100"
@@ -106,12 +108,20 @@ export default function Navbar() {
               </button>
             </div>
           ) : (
-            <button
-              onClick={() => signIn("google", { callbackUrl: "/" })}
-              className="px-4 py-2 bg-blue-600 text-white rounded m-2"
-            >
-              Login with Google
-            </button>
+            <div className="flex flex-col gap-2 p-2 border-t">
+              <Link
+                href="/login"
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-center"
+              >
+                Login
+              </Link>
+              <Link
+                href="/register"
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 text-center"
+              >
+                Register
+              </Link>
+            </div>
           )}
         </div>
       )}
