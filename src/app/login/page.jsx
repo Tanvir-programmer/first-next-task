@@ -16,7 +16,7 @@ export default function LoginPage() {
     if (res?.error) {
       setError("Invalid credentials");
     } else {
-      router.push("/"); // redirect after login
+      router.push("/"); // Navbar updates automatically
     }
   };
 
@@ -25,7 +25,7 @@ export default function LoginPage() {
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md text-center">
         <h1 className="text-2xl font-bold mb-4">Login</h1>
 
-        {/* Google login */}
+        {/* Google Login */}
         <button
           onClick={() => signIn("google", { callbackUrl: "/" })}
           className="w-full py-3 bg-blue-600 text-white rounded mb-4"
@@ -35,7 +35,7 @@ export default function LoginPage() {
 
         <div className="mb-4 text-gray-400">OR</div>
 
-        {/* Credentials login */}
+        {/* Credentials Login */}
         <form onSubmit={handleSubmit}>
           <input
             type="email"

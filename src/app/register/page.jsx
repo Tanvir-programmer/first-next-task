@@ -14,10 +14,13 @@ export default function RegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Call your API to create a user
-      // Example: await fetch('/api/register', { method: 'POST', body: JSON.stringify({name,email,password}) })
-      router.push("/"); // redirect to home after registration
-    } catch (err) {
+      // TODO: Call your API to register user
+      // await fetch('/api/register', { method:'POST', body:JSON.stringify({name,email,password}) })
+
+      // Automatically log in the user after registration
+      await signIn("credentials", { redirect: false, email, password });
+      router.push("/"); // Navbar updates automatically
+    } catch {
       setError("Registration failed");
     }
   };
@@ -37,6 +40,7 @@ export default function RegisterPage() {
 
         <div className="mb-4 text-gray-400">OR</div>
 
+        {/* Credentials Registration */}
         <form onSubmit={handleSubmit}>
           <input
             type="text"

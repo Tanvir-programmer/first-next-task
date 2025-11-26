@@ -24,7 +24,6 @@ export default function Navbar() {
           <Link href="/addCourse">Add Course</Link>
           <Link href="/contact">Contact</Link>
 
-          {/* Right Section: Login/Register or Profile */}
           {session ? (
             <div className="relative">
               <button
@@ -78,7 +77,7 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* Mobile Menu Toggle */}
+        {/* Mobile Toggle */}
         <button
           className="md:hidden p-2 border"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
